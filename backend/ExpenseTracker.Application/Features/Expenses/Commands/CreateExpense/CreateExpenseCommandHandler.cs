@@ -168,8 +168,7 @@ public class CreateExpenseCommandHandler : IRequestHandler<CreateExpenseCommand,
 
             // Only notify when THIS expense causes the budget
             // to cross the 50% threshold.
-            if (previousPercentage <= thresholdPercentage &&
-                newPercentage > thresholdPercentage)
+            if (newPercentage > thresholdPercentage)
             {
                 ExpenseMetrics.BudgetThresholdExceeded();
 

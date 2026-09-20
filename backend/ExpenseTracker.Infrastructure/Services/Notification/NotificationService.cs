@@ -4,6 +4,7 @@ using ExpenseTracker.Application.DTOs.Notification;
 using ExpenseTracker.Domain.Interfaces.Repositories;
 using ExpenseTracker.Domain.SharedKernel;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseTracker.Infrastructure.Services.Notification;
 
@@ -12,17 +13,19 @@ public class NotificationService : INotificationService
     private readonly IHubContext<NotificationHub> _hubContext;
     private readonly INotificationRepository _notificationRepository;
     private readonly IMapper _mapper;
-
+    private readonly ILogger<NotificationService> _logger;
 
     public NotificationService(
         IHubContext<NotificationHub> hubContext,
         INotificationRepository notificationRepository,
-        IMapper mapper
+        IMapper mapper,
+        ILogger<NotificationService> logger
        )
     {
         _hubContext = hubContext;
         _notificationRepository = notificationRepository;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task BudgetExceededAsync(
@@ -58,15 +61,12 @@ public class NotificationService : INotificationService
         await _hubContext
             .Clients
             .User(userId)
-            .SendAsync("BudgetExceeded", new
-            {
-                budgetId,
-                budgetName,
-                // totalSpent,
-                // budgetAmount,
-                percentageUsed,
-                remainingAmount,
-                exceededAt = DateTime.UtcNow
-            }, cancellationToken);
+            .SendAsync("NotificationReceived",
+                notificationDto,
+                cancellationToken);
+        
+        _logger.LogInformation(
+            "BudgetExceeded notification sent via SignalR to UserId {UserId}",
+            userId);
     }
 }
