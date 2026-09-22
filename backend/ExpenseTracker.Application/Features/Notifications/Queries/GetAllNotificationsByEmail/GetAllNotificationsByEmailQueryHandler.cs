@@ -34,8 +34,8 @@ public class GetAllNotificationsByEmailQueryHandler : IRequestHandler<GetAllNoti
             userId,
             skip: query.Skip,
             take: query.EffectivePageSize,
-            sortBy: query.SortBy,
-            sortDesc: query.SortDesc,
+            sortBy: nameof(NotificationDto.CreatedAt),
+            sortDesc: true,
             search: query.Search,
             cancellationToken: cancellationToken);
         
