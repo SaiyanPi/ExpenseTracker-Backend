@@ -87,8 +87,9 @@ builder.Services.AddMemoryCache();
 
 // Add controllers / minimal APIs
 builder.Services.AddControllers()
-    .AddJsonOptions(options =>  // serialize/deserialize as numbers and preserve names for better error reporting
-    {
+    .AddJsonOptions(options => 
+    {   
+        // Serialize enums as strings instead of numeric values.
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
     // .AddXmlSerializerFormatters();

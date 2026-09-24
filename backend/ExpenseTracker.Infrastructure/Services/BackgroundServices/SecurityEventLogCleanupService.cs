@@ -23,18 +23,21 @@ public class SecurityEventLogCleanupService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(
-                TimeSpan.FromHours(_retentionOptions.CleanupIntervalHours),
-                stoppingToken);
-
             using var scope = _scopeFactory.CreateScope();
+
             var repo = scope.ServiceProvider
-                .GetRequiredService<ISecurityEventLogRepository>();
+                .GetRequiredService<INotificationRepository>();
 
             var cutoffDate = DateTime.UtcNow
                 .AddDays(-_retentionOptions.RetentionDays);
 
-            await repo.DeleteOlderThanAsync(cutoffDate, stoppingToken);
+            await repo.DeleteOlderThanAsync(
+                cutoffDate,
+                stoppingToken);
+
+            await Task.Delay(
+                TimeSpan.FromHours(_retentionOptions.CleanupIntervalHours),
+                stoppingToken);
         }
     }
 }

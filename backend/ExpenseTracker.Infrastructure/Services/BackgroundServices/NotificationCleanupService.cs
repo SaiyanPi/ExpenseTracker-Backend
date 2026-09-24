@@ -6,14 +6,14 @@ using Microsoft.Extensions.Options;
 
 namespace ExpenseTracker.Infrastructure.Services.BackgroundServices;
 
-public class AuditLogCleanupService : BackgroundService
+public class NotificationCleanupService : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly LogRetentionOptions _retentionOptions;
+    private readonly NotificationRetentionOptions _retentionOptions;
 
-    public AuditLogCleanupService(
+    public NotificationCleanupService(
         IServiceScopeFactory serviceScopeFactory,
-        IOptions<LogRetentionOptions> retentionOptions)
+        IOptions<NotificationRetentionOptions> retentionOptions)
     {
         _scopeFactory = serviceScopeFactory;
         _retentionOptions = retentionOptions.Value;

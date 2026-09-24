@@ -53,11 +53,11 @@ public class NotificationRepository : INotificationRepository
         return (notifications, totalCount);
     }
 
-    public async Task<Notification?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        var notification = await _dbContext.Notifications.FindAsync(id, cancellationToken);
-        return notification;
-    }
+    // public async Task<Notification?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    // {
+    //     var notification = await _dbContext.Notifications.FindAsync(id, cancellationToken);
+    //     return notification;
+    // }
 
     public async Task AddAsync(Notification notification, CancellationToken cancellationToken = default)
     {
@@ -104,5 +104,13 @@ public class NotificationRepository : INotificationRepository
                     .SetProperty(n => n.IsRead, true)
                     .SetProperty(n => n.ReadAt, readAt),
                     cancellationToken);
+    }
+
+    public async Task<int> DeleteOlderThanAsync(DateTime cutOffDate,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Notifications
+            .Where(n => n.CreatedAt < cutOffDate)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

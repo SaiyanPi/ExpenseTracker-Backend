@@ -47,10 +47,12 @@ public static class InfrastructureServiceRegistration
         services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<SmtpSettings>>().Value);
 
-        //AuditLog Retention config
+        //AuditLog, SecurityEventLog, Notifications Retention config
         services.Configure<LogRetentionOptions>(configuration.GetSection("AuditLogRetention"));
         services.AddHostedService<AuditLogCleanupService>();
         services.AddHostedService<SecurityEventLogCleanupService>();
+        services.Configure<NotificationRetentionOptions>(configuration.GetSection("NotificationRetention"));
+        services.AddHostedService<NotificationCleanupService>();
 
         // registering email service
         services.AddScoped<IEmailService, SmtpEmailService>();

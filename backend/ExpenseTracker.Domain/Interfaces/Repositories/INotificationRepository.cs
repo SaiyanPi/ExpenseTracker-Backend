@@ -13,9 +13,11 @@ public interface INotificationRepository
         string? search = null,
         CancellationToken cancellationToken = default);
     
-    Task<Notification?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    // Task<Notification?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task AddAsync(Notification notification, CancellationToken cancellationToken = default);
     Task<int> GetUnreadCountAsync(string userId, CancellationToken cancellationToken = default);
     Task MarkAsReadAsync(Guid notificationId, string userId, CancellationToken cancellationToken = default);
     Task MarkAllAsReadAsync(string userId, CancellationToken cancellationToken = default);
+
+    Task<int> DeleteOlderThanAsync(DateTime cutOffDate, CancellationToken cancellationToken = default);
 }
